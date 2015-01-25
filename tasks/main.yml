@@ -1,0 +1,49 @@
+---
+# tasks file for ans-role-linux-base
+# 
+
+
+# bug - hostname module doesnt work with Centos 7
+#- name: Update hostname
+#  hostname: name={{ ansible_hostname }}
+
+
+- name: Add hostname to /etc/hosts
+  lineinfile: >
+    state=present
+    dest=/etc/hosts
+    line="{{ ansible_eth0.ipv4.address }} {{ ansible_hostname }} # ansible"
+    regexp="^{{ ansible_eth0.ipv4.address }} {{ ansible_hostname }} # ansible"
+    insertafter=EOF
+
+
+- name: Configure locale
+  command: localectl set-locale LANG={{ locale }} 
+  # when: ansible_env.LC_ALL != {{ locale }}
+
+
+- name: Configure timezone
+  command: ln -sf /usr/share/zoneinfo/{{ timezone }} /etc/localtime
+  when:
+
+
+- name: Add the OS specific variables
+  include_vars: "{{ ansible_os_family }}.yml"
+
+
+# Debian/Ubuntu(setup) specific tasks
+- include: setup-debian.yml
+  when: ansible_os_family == "Debian"
+
+
+# RedHat/CentOS(setup) specific tasks
+- include: setup-redhat.yml
+  when: ansible_os_family == "RedHat"
+
+
+- name: Create directory for ansible custom facts
+  file: state=directory recurse=yes path=/etc/ansible/facts.d
+
+
+#- name: Re-read facts after adding custom fact
+#  setup: filter=ansible_local

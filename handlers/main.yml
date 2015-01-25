@@ -1,0 +1,8 @@
+---
+# handlers file for ans-role-linux-base
+# 
+- name: restart sshd
+  service: name=sshd state=restarted
+ 
+- name: restart ssh
+  service: name=ssh state=restarted

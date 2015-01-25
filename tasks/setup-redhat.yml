@@ -1,0 +1,55 @@
+---
+# recommended security/hardening changes
+- name: SECURITY | Restrict sshd ciphers
+  lineinfile: dest=/etc/ssh/sshd_config state=present line="Ciphers aes256-ctr,aes192-ctr,aes128-ctr,aes256-gcm@openssh.com,aes128-gcm@openssh.com,arcfour256"
+  notify:
+    - restart sshd
+
+# RedHat/CentOS(setup) specific tasks
+- name: Install EPEL yum repository
+  yum: pkg=epel-release state=installed
+
+- name: Update the RedHat/CentOS distro
+  yum: name=* state=latest
+
+# enable epel-testing for duplicity install...review in future
+- name: Install packages
+  yum: pkg={{ item }} enablerepo=epel-testing state=present
+  with_items: base_packages
+
+- name: Duply | Download tarball
+  get_url: url={{ duply_url }} dest=/tmp
+  register: new_duply
+
+- name: Duply | Extract tarball
+  unarchive: src=/tmp/{{ duply_tarball }} dest=/tmp copy=no
+  when: new_duply|changed
+
+- name: Duply | Install
+  command: mv /tmp/duply_{{ duply_minor_version }}/duply /usr/local/bin
+  when: new_duply|changed
+
+
+
+# set up the motd
+- name: Install motd script
+  copy: src=dynmotd-centos dest=/usr/local/bin/dynmotd mode=0755 owner=root
+
+- name: Configure motd in /etc/profile
+  lineinfile: >
+    state=present
+    dest=/etc/profile
+    line="/usr/local/bin/dynmotd # ansible"
+    regexp="^\/usr\/local\/bin\/dynmotd # ansible"
+    insertafter=EOF
+
+#ansible optimisation for pipelining and accelerated mode
+- name: Ensure requiretty is disabled in /etc/sudoers
+  lineinfile: >
+    dest=/etc/sudoers
+    regexp="^Defaults    requiretty"
+    state=absent
+
+- name: Update ansible_last_update file
+  template: src=ansible_last_update.j2 dest=/usr/local/bin/ansible_last_update owner=root
+

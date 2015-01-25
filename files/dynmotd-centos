@@ -1,0 +1,67 @@
+#!/bin/bash
+# motd script
+
+RED="$(tput setaf 1)"
+GREEN="$(tput setaf 2)"
+YELLOW="$(tput setaf 3)"
+BLUE="$(tput setaf 4)"
+MAGENTO="$(tput setaf 5)"
+CYAN="$(tput setaf 6)"
+WHITE="$(tput setaf 7)"
+RESET="$(tput setaf 0)"
+
+OS=$(cat /etc/redhat-release)
+KERNEL=$(uname -r)
+HOSTNAME=$(hostname)
+IP=$(hostname  -I | cut -f1 -d' ')
+CPU=$(nproc)
+
+#MEMORY="awk '( $1 == "MemTotal:" ) { print $2/1048576 }' OFMT="%3.2f" /proc/meminfo"
+#MEMORY-USED="free | grep Mem | awk '{print $3/$2 * 100.0}' OFMT='%3.0f'"
+MEMORYUSAGE=$(free -m | awk 'NR==2{printf " %s/%sMB (%.2f%)\n",$3,$2,$3*100/$2 }')
+DISKUSAGE=$(df -h | awk '$NF=="/"{printf " %d/%dGB (%s)\n", $3,$2,$5}')
+LOAD=$(top -bn1 | grep load | awk '{printf " %.2f\n", $(NF-2)}')
+USERCOUNT=$(users | wc -w)
+LASTLOGINUSER=$(last -i | grep "still logged" | awk '{ print $1 }')
+LASTLOGINDATE=""
+LASTLOGINIP=$(last -i | grep "still logged" | awk '{ print $3 }')
+
+source /usr/local/bin/ansible_last_update
+
+echo  "$BLUE 
+ 		   ____       _       _ _   _
+		  |  _ \  ___| | ___ (_) |_| |_ ___
+		  | | | |/ _ \ |/ _ \| | __| __/ _ \\
+		  | |_| |  __/ | (_) | | |_| ||  __/$GREEN _ $BLUE
+		  |____/ \___|_|\___/|_|\__|\__\___$GREEN (_) $BLUE
+	  $WHITE	  Secure Cloud
+
+  $GREEN ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+  $WHITE This is a Deloitte system, restricted to authorised individuals. This system
+   is being monitored. Any unauthorised users, access and/or modifications will 
+   be investigated and appropriate action taken. Please disconnect immediately 
+   if you are not an authorised user.
+
+  $GREEN ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+   OS:              $WHITE $OS($KERNEL)
+  $GREEN Hostname:        $WHITE $HOSTNAME
+  $GREEN IP address:      $WHITE $IP
+  $GREEN vCPU:            $WHITE $CPU
+  $GREEN Memory Usage:   $WHITE $MEMORYUSAGE
+  $GREEN Disk Usage:     $WHITE $DISKUSAGE
+  $GREEN Load:           $WHITE $LOAD
+  $GREEN Current users:   $WHITE $USERCOUNT users logged in
+
+  $GREEN ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+  $WHITE This is system is managed by Ansible, an automated configuration
+   management system. Please do not make any changes without consulting
+   the DevOps team.
+
+  $GREEN Last ansible update: $WHITE$lastupdate
+
+  $GREEN ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+  $WHITE
+"

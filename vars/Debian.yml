@@ -1,0 +1,16 @@
+---
+base_packages:
+  - lvm2
+  - facter
+  - ohai
+  - vim
+  - curl
+  - wget
+  - git
+  - tmux
+  - unzip
+  - htop
+  - s3cmd
+  - python-boto
+  - duplicity
+  - duply

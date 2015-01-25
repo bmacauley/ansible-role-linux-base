@@ -1,0 +1,18 @@
+---
+# defaults file for ans-role-linux-base
+
+# locale
+locale: en_GB.UTF-8
+sourcedef: en_GB
+charmap: UTF-8
+
+# timezone
+timezone: Europe/London
+
+# Duply install
+
+duply_major_version: 1.9.x
+duply_minor_version: 1.9.1
+duply_tarball: duply_{{ duply_minor_version }}.tgz
+#duply_tarball: http://downloads.sourceforge.net/project/ftplicity/duply%20%28simple%20duplicity%29/1.9.x/duply_1.9.1.tgz
+duply_url: http://downloads.sourceforge.net/project/ftplicity/duply%20%28simple%20duplicity%29/{{ duply_major_version }}/{{ duply_tarball }}

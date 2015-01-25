@@ -1,0 +1,17 @@
+---
+# Debian/Ubuntu(setup) specific tasks
+
+# recommended security/hardening changes (ssh makes it debian specific)
+- name: SECURITY | Restrict sshd ciphers
+  lineinfile: dest=/etc/ssh/sshd_config state=present line="Ciphers aes256-ctr,aes192-ctr,aes128-ctr,aes256-gcm@openssh.com,aes128-gcm@openssh.com,arcfour256"
+  notify:
+    - restart ssh
+
+- name: Update the Debian/Ubuntu distro
+  apt: upgrade=yes update_cache=yes cache_valid_time=3600
+
+
+- name: Install packages
+  apt: name={{ item }}  state=latest 
+  with_items: base_packages
+

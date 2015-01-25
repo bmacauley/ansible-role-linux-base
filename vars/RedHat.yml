@@ -1,0 +1,13 @@
+---
+base_packages:
+  - lvm2
+  - facter
+  - vim
+  - curl
+  - wget
+  - git
+  - tmux
+  - htop
+  - unzip
+  - s3cmd
+  - duplicity
