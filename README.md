@@ -9,10 +9,10 @@ None
 
 Role Variables
 --------------
+```
 locale - server locale eg en_GB.UTF-8
-
 timezone - server localtime timezone eg Europe/London
-
+```
 Dependencies
 ------------
 n/a
