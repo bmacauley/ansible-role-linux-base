@@ -29,16 +29,16 @@ LASTLOGINIP=$(last -i | grep "still logged" | awk '{ print $3 }')
 source /usr/local/bin/ansible_last_update
 
 echo  "$BLUE 
- 		   ____       _       _ _   _
-		  |  _ \  ___| | ___ (_) |_| |_ ___
-		  | | | |/ _ \ |/ _ \| | __| __/ _ \\
-		  | |_| |  __/ | (_) | | |_| ||  __/$GREEN _ $BLUE
-		  |____/ \___|_|\___/|_|\__|\__\___$GREEN (_) $BLUE
+     ____       _             __  __   
+    | __ ) _ __(_) __ _ _ __ |  \/  |  
+    |  _ \| '__| |/ _` | '_ \| |\/| |  
+    | |_) | |  | | (_| | | | | |  | |$GREEN _ $BLUE
+    |____/|_|  |_|\__,_|_| |_|_|  |_$GREEN (_) $BLUE                                   
 	  $WHITE	  Secure Cloud
 
   $GREEN ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-  $WHITE This is a Deloitte system, restricted to authorised individuals. This system
+  $WHITE This is a BrianM system, restricted to authorised individuals. This system
    is being monitored. Any unauthorised users, access and/or modifications will 
    be investigated and appropriate action taken. Please disconnect immediately 
    if you are not an authorised user.
